@@ -1,0 +1,25 @@
+# Example Model Configuration for TrueForge Harness
+# Team ID: TM-5B7EEFF93DB | Techfest 2026-27 TrueFoundry Forge-a-thon
+
+models:
+  primary:
+    provider: "openai-compatible"
+    model: "gemini-1.5-pro"
+    base_url: "http://localhost:8790/v1"
+    api_key_env: "TRUEFORGE_API_KEY"
+    temperature: 0.1
+    max_tokens: 8192
+
+  fallback:
+    provider: "openai-compatible"
+    model: "gemini-1.5-flash"
+    base_url: "http://localhost:8790/v1"
+    api_key_env: "FALLBACK_API_KEY"
+    temperature: 0.1
+    max_tokens: 8192
+
+  local_alternative:
+    provider: "ollama"
+    model: "qwen2.5-coder:7b"
+    base_url: "http://localhost:11434/v1"
+    temperature: 0.1

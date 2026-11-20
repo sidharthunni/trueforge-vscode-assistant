@@ -1,0 +1,117 @@
+{
+  "name": "trueforge-code-assistant",
+  "displayName": "TrueForge Coding Assistant",
+  "description": "Editor-native AI coding assistant powered by TrueForge agent harness",
+  "version": "1.0.0",
+  "publisher": "Team-TM-5B7EEFF93DB",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "AI",
+    "Programming Languages",
+    "Education"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "trueforge.inlineEdit",
+        "title": "TrueForge: Inline Edit",
+        "category": "TrueForge"
+      },
+      {
+        "command": "trueforge.openAgentPanel",
+        "title": "TrueForge: Open Agent Mode Panel",
+        "category": "TrueForge"
+      },
+      {
+        "command": "trueforge.acceptHunk",
+        "title": "TrueForge: Accept Hunk",
+        "category": "TrueForge"
+      },
+      {
+        "command": "trueforge.rejectHunk",
+        "title": "TrueForge: Reject Hunk",
+        "category": "TrueForge"
+      },
+      {
+        "command": "trueforge.undoChange",
+        "title": "TrueForge: Undo Applied Change",
+        "category": "TrueForge"
+      },
+      {
+        "command": "trueforge.cancelTurn",
+        "title": "TrueForge: Cancel Generation",
+        "category": "TrueForge"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "trueforge.inlineEdit",
+        "key": "ctrl+k",
+        "mac": "cmd+k",
+        "when": "editorTextFocus"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "trueforge-sidebar",
+          "title": "TrueForge Agent",
+          "icon": "media/trueforge-icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "trueforge-sidebar": [
+        {
+          "type": "webview",
+          "id": "trueforge.agentView",
+          "name": "TrueForge Agent Mode"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "TrueForge Assistant",
+      "properties": {
+        "trueforge.serverUrl": {
+          "type": "string",
+          "default": "http://localhost:8790",
+          "description": "Base URL of the local TrueForge agent harness server"
+        },
+        "trueforge.primaryModel": {
+          "type": "string",
+          "default": "gemini-1.5-pro",
+          "description": "Primary model configured in TrueForge"
+        },
+        "trueforge.fallbackModel": {
+          "type": "string",
+          "default": "gemini-1.5-flash",
+          "description": "Secondary model for resilient failover"
+        },
+        "trueforge.contextTokenBudget": {
+          "type": "number",
+          "default": 4000,
+          "description": "Context window budget for automated symbol and file retrieval"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@truefoundry/trueforge-sdk": "file:/home/sid/.local/node/lib/node_modules/@truefoundry/trueforge/node_modules/@truefoundry/trueforge-sdk"
+  }
+}

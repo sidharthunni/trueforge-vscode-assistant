@@ -1,0 +1,73 @@
+# TrueForge Agent Harness Configuration
+# Team ID: TM-5B7EEFF93DB | Techfest 2026-27 TrueFoundry Forge-a-thon
+# Harness Version: @truefoundry/trueforge v0.185.1
+
+version: "1.0"
+agent:
+  id: "forge-code-assistant"
+  name: "TrueForge Coding Assistant"
+  description: "Autonomous editor-native coding assistant with budgeted context assembly, hunk-by-hunk diff approvals, and resilient multi-model failover."
+  
+  # Model Setup & Resilient Fallback Routing
+  models:
+    primary:
+      provider: "openai-compatible"
+      model: "gemini-1.5-pro"
+      base_url: "http://localhost:8790/v1"
+      temperature: 0.1
+      max_tokens: 8192
+    fallback:
+      provider: "openai-compatible"
+      model: "gemini-1.5-flash"
+      base_url: "http://localhost:8790/v1"
+      temperature: 0.1
+      max_tokens: 8192
+    failover_policy:
+      auto_retry: true
+      max_retries: 2
+      switch_to_fallback_on:
+        - "UNREACHABLE_ENDPOINT"
+        - "INVALID_API_KEY"
+        - "RATE_LIMIT_EXCEEDED"
+        - "GATEWAY_TIMEOUT"
+
+  # Context Engineering & Compaction
+  context:
+    max_budget_tokens: 4000
+    compaction:
+      enabled: true
+      strategy: "ast_symbol_hierarchy"
+      threshold_ratio: 0.75
+      keep_active_diffs: true
+    retrieval:
+      strategy: "ast_grep_hybrid"
+      max_file_snippets: 5
+      max_snippet_lines: 60
+      explain_selection: true
+
+  # MCP Tool Server Registration
+  mcp_servers:
+    - name: "editor-tools"
+      command: "node"
+      args: ["./agent/dist/mcp-server.js"]
+      env:
+        MCP_TRANSPORT: "stdio"
+      tools:
+        - name: "read_file"
+          description: "Reads file content with optional line range within budget"
+          require_approval: false
+        - name: "search_workspace"
+          description: "Fast ripgrep / regex workspace search bounded by token budget"
+          require_approval: false
+        - name: "propose_diff"
+          description: "Proposes hunk-by-hunk diff modifications for editor review"
+          require_approval: true
+        - name: "run_terminal"
+          description: "Executes sandboxed test or validation commands in terminal"
+          require_approval: false
+
+  # Human-In-The-Loop Approval Policy
+  approvals:
+    mode: "per_hunk_interactive"
+    allow_undo: true
+    safe_disk_writes: true

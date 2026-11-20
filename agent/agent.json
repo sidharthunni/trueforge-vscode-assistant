@@ -1,0 +1,71 @@
+{
+  "id": "forge-code-assistant",
+  "name": "TrueForge Coding Assistant",
+  "description": "TrueForge agent harness definition for editor-native code assistant (Team TM-5B7EEFF93DB)",
+  "system_prompt": "You are TrueForge Coding Assistant, an autonomous coding agent operating inside Visual Studio Code. You read code using `read_file`, search files using `search_workspace`, execute test commands using `run_terminal`, and make changes strictly using `propose_diff`. Always explain which files you choose to inspect and why. Keep retrieved context within budget. Never attempt to write directly to disk; every modification must be proposed as a unified diff hunk for the user to review, accept, or reject.",
+  "model_config": {
+    "provider": "openai-compatible",
+    "model": "gemini-1.5-pro",
+    "fallback_model": "gemini-1.5-flash",
+    "temperature": 0.1,
+    "max_tokens": 8192
+  },
+  "context_config": {
+    "token_budget": 4000,
+    "compaction_enabled": true,
+    "deferred_tool_loading": true
+  },
+  "tools": [
+    {
+      "name": "read_file",
+      "description": "Read file lines with bounded budget",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string" },
+          "start_line": { "type": "number" },
+          "end_line": { "type": "number" }
+        },
+        "required": ["path"]
+      }
+    },
+    {
+      "name": "search_workspace",
+      "description": "Search workspace for symbols or patterns with size budget",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": { "type": "string" },
+          "file_pattern": { "type": "string" },
+          "max_results": { "type": "number" }
+        },
+        "required": ["query"]
+      }
+    },
+    {
+      "name": "propose_diff",
+      "description": "Propose hunk-by-hunk unified diff for user review and approval",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string" },
+          "explanation": { "type": "string" },
+          "diff": { "type": "string" }
+        },
+        "required": ["path", "diff"]
+      }
+    },
+    {
+      "name": "run_terminal",
+      "description": "Run shell verification command in workspace",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "command": { "type": "string" },
+          "timeout_ms": { "type": "number" }
+        },
+        "required": ["command"]
+      }
+    }
+  ]
+}
