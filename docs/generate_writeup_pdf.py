@@ -167,7 +167,7 @@ def build_pdf():
     story.append(Paragraph("1. Team", h1_style))
     story.append(Paragraph("<b>Team ID:</b> TM-5B7EEFF93DB | <b>Track:</b> Techfest 2026-27 TrueFoundry Forge-a-thon", body_style))
     story.append(Paragraph("<b>Team Leader:</b> S Sidharth Unni | <b>Institution:</b> Amrita Vishwa Vidyapeetham", body_style))
-    story.append(Paragraph("<b>GitHub Handle:</b> @sidharthunni45 | <b>Repository:</b> github.com/sidharthunni45/trueforge-vscode-assistant", body_style))
+    story.append(Paragraph("<b>GitHub Handle:</b> @sidharthunni | <b>Repository:</b> github.com/sidharthunni/trueforge-vscode-assistant", body_style))
     story.append(Spacer(1, 4))
 
     # Heading 2: Starting point
